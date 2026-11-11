@@ -1,1 +1,717 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101323">
+<title>QR Studio | C9 UZAIR</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+ --bg:#101323;--panel:#1b2035;--panel2:#222840;
+ --text:#f7f7ff;--muted:#9da4bd;--purple:#9878ff;
+ --cyan:#4bd5e5;--green:#4bd6a4;--border:#ffffff15;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ background:#0c1020;color:var(--text);
+ font-family:Inter,sans-serif;min-height:100vh;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{
+ max-width:510px;min-height:100vh;margin:auto;
+ position:relative;overflow:hidden;
+ background:
+ radial-gradient(circle at 90% 0%,#49338a35,transparent 35%),
+ radial-gradient(circle at 0% 80%,#174d6630,transparent 35%),
+ var(--bg);
+}
+.header{
+ height:72px;padding:0 22px;
+ display:flex;align-items:center;justify-content:space-between;
+ border-bottom:1px solid var(--border);
+ background:#121628;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}
+.logo{
+ width:38px;height:38px;border-radius:12px;
+ display:grid;place-items:center;
+ background:linear-gradient(135deg,#8968ff,#36c8dc);
+ box-shadow:0 5px 20px #7654ed55;
+}
+.credit{font-size:10px;color:#b5a3ff;font-weight:700;letter-spacing:.5px}
+.screen{display:none;padding:27px 22px 35px;animation:enter .35s ease}
+.screen.active{display:block}
+@keyframes enter{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+h1{font-size:30px;line-height:1.2;letter-spacing:-1px}
+h2{font-size:19px}
+p{color:var(--muted);font-size:13px;line-height:1.7}
+.gradient{
+ background:linear-gradient(90deg,#b19aff,#4bd5e5);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.eyebrow{font-size:10px;color:#b6a5ff;font-weight:800;letter-spacing:1.5px;margin-bottom:13px}
+.hero-icon{
+ width:105px;height:105px;border-radius:30px;
+ display:grid;place-items:center;margin:25px auto;
+ background:linear-gradient(140deg,#9875ff,#37c8df);
+ box-shadow:0 15px 45px #7555dd45;
+ transform:rotate(-5deg);
+}
+.hero-icon i{width:48px;height:48px}
+.primary,.secondary{
+ width:100%;height:52px;border-radius:14px;
+ display:flex;align-items:center;justify-content:center;gap:10px;
+ font-size:13px;font-weight:700;transition:.2s;
+}
+.primary{
+ border:0;color:white;
+ background:linear-gradient(100deg,#805ce9,#428fe9);
+ box-shadow:0 8px 24px #7555dd35;
+}
+.secondary{background:#ffffff08;color:white;border:1px solid var(--border)}
+.primary:active,.secondary:active{transform:scale(.98)}
+.actions{display:grid;gap:11px;margin-top:25px}
+.credit-footer{
+ text-align:center;color:#888da8;font-size:10px;
+ padding:20px 8px;border-top:1px solid var(--border);
+ margin-top:28px;
+}
+.credit-footer strong{color:#b39dff}
+.welcome{text-align:center;padding-top:50px}
+.welcome p{max-width:340px;margin:12px auto}
+.privacy-card{
+ padding:18px;border:1px solid var(--border);
+ background:#ffffff08;border-radius:17px;margin-top:20px;
+}
+.policy-item{display:flex;gap:12px;margin:16px 0}
+.policy-item i{color:#9f88ff;flex-shrink:0;width:19px}
+.policy-item strong{display:block;font-size:12px;margin-bottom:5px}
+.policy-item p{font-size:11px}
+.agree{
+ display:flex;align-items:flex-start;gap:10px;
+ font-size:11px;color:#c1c3d5;margin-top:20px;line-height:1.6;
+}
+.agree input{accent-color:#9878ff;margin-top:2px}
+.loading-screen{text-align:center;padding-top:85px}
+.spinner{
+ width:95px;height:95px;margin:0 auto 30px;
+ border:4px solid #ffffff12;
+ border-top-color:#a48aff;border-right-color:#4bd5e5;
+ border-radius:50%;animation:spin .85s linear infinite;
+ display:grid;place-items:center;
+}
+.spinner i{width:32px;height:32px;color:#b6a5ff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-screen h2{margin-bottom:10px}
+.progress{height:5px;border-radius:20px;background:#ffffff15;margin:25px 0 12px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#9a75ff,#4bd5e5);transition:width .2s}
+.loading-caption{font-size:11px;color:var(--muted)}
+.back-row{display:flex;align-items:center;gap:13px;margin-bottom:27px}
+.back{
+ width:39px;height:39px;border:1px solid var(--border);
+ background:#ffffff08;border-radius:12px;color:white;
+ display:grid;place-items:center;
+}
+.back-row p{font-size:11px;margin-top:4px}
+.card{padding:19px;border:1px solid var(--border);background:#ffffff08;border-radius:18px}
+.option-list{display:grid;gap:11px}
+.option{
+ width:100%;padding:15px;border-radius:15px;
+ border:1px solid var(--border);background:#ffffff08;color:white;
+ display:flex;align-items:center;gap:13px;text-align:left;
+ transition:.2s;
+}
+.option:active{transform:scale(.98)}
+.option:hover{border-color:#9878ff88;background:#9878ff12}
+.option-icon{
+ width:44px;height:44px;border-radius:13px;
+ display:grid;place-items:center;flex-shrink:0;
+ background:#9878ff20;color:#b9a5ff;
+}
+.option-icon i{width:21px}
+.option strong{font-size:12px;display:block}
+.option small{font-size:10px;color:var(--muted);display:block;margin-top:5px}
+.option .arrow{margin-left:auto;color:#858aa7;width:17px}
+.label{display:block;font-size:12px;font-weight:700;margin:20px 0 9px}
+.field{
+ width:100%;height:50px;border-radius:12px;
+ background:#171c30;border:1px solid var(--border);
+ padding:0 13px;color:white;outline:none;font-size:12px;
+}
+.field:focus{border-color:#9878ff}
+.field::placeholder{color:#777e99}
+.colors{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.color{
+ width:32px;height:32px;border-radius:50%;
+ border:2px solid transparent;outline:1px solid #ffffff30;
+}
+.color.selected{outline:2px solid white;outline-offset:3px}
+.custom-color{width:38px;height:38px;border:0;background:none}
+.tip{
+ padding:13px;border-radius:13px;background:#4bd5e510;
+ color:#a7dce5;font-size:10px;line-height:1.6;margin-top:18px;
+}
+.result-card{
+ background:#f5f4fb;border-radius:18px;min-height:260px;
+ display:flex;align-items:center;justify-content:center;padding:20px;
+ margin:22px 0;
+}
+#qrOutput{padding:10px;background:white;border-radius:8px}
+#qrOutput canvas,#qrOutput img{display:block;max-width:100%;height:auto}
+.success{
+ width:47px;height:47px;border-radius:50%;display:grid;
+ place-items:center;background:#4bd6a420;color:#4bd6a4;margin:0 auto 18px;
+}
+.result-url{font-size:10px;color:var(--muted);overflow-wrap:anywhere;text-align:center}
+.toast-area{
+ position:fixed;top:85px;left:50%;transform:translateX(-50%);
+ width:min(90%,390px);z-index:100;pointer-events:none;
+}
+.toast{
+ display:flex;align-items:center;gap:10px;
+ background:#252a40;border:1px solid #ffffff20;
+ box-shadow:0 10px 35px #0006;padding:13px 15px;
+ border-radius:13px;font-size:11px;animation:toastIn .25s ease;
+}
+.toast i{color:#4bd6a4;width:17px}
+@keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.home-hero{
+ padding:23px;border-radius:21px;border:1px solid #a38aff30;
+ background:linear-gradient(130deg,#7655d82e,#25b5c51a);
+}
+.home-hero p{margin-top:10px;font-size:11px;max-width:270px}
+.home-hero .hero-icon{width:65px;height:65px;border-radius:19px;margin:0 0 18px}
+.home-hero .hero-icon i{width:30px;height:30px}
+.section-title{margin:27px 0 14px;font-size:16px}
+.history-item{padding:13px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center}
+.history-item div:nth-child(2){flex:1;min-width:0}
+.history-item strong{font-size:11px;display:block}
+.history-item small{font-size:10px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:4px}
+.history-item button{background:none;border:0;color:#aaa;padding:7px}
+.empty{text-align:center;padding:35px 10px}
+.empty i{width:35px;height:35px;color:#9b84ff;margin-bottom:12px}
+.empty p{font-size:11px}
+[hidden]{display:none!important}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="header">
+ <div class="brand">
+  <div class="logo"><i data-lucide="qr-code"></i></div>
+  <span>QR Studio</span>
+ </div>
+ <span class="credit">BY C9 UZAIR</span>
+</header>
+
+<!-- WELCOME -->
+<section class="screen active" id="welcome">
+ <div class="welcome">
+  <div class="eyebrow">WELCOME TO</div>
+  <h1>QR <span class="gradient">STUDIO</span></h1>
+  <p>A simple and beautiful way to create QR codes for your links and social profiles.</p>
+  <div class="hero-icon"><i data-lucide="scan-qr-code"></i></div>
+  <h2>Everything starts<br>with a simple scan.</h2>
+  <p>Create, customize and share your own QR codes in just a few steps.</p>
+  <div class="actions">
+   <button class="primary" onclick="showScreen('privacy')">Get Started <i data-lucide="arrow-right"></i></button>
+  </div>
+ </div>
+ <div class="credit-footer">Designed & Developed by <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- PRIVACY -->
+<section class="screen" id="privacy">
+ <div class="back-row">
+  <button class="back" onclick="showScreen('welcome')"><i data-lucide="arrow-left"></i></button>
+  <div><h2>Privacy & Safety</h2><p>Before using QR Studio</p></div>
+ </div>
+
+ <div class="eyebrow">YOUR PRIVACY MATTERS</div>
+ <h1>Simple tools.<br><span class="gradient">Clear privacy.</span></h1>
+
+ <div class="privacy-card">
+  <div class="policy-item">
+   <i data-lucide="shield-check"></i>
+   <div><strong>Browser-based QR creation</strong><p>Your entered link is used in your browser to generate the QR image.</p></div>
+  </div>
+  <div class="policy-item">
+   <i data-lucide="database"></i>
+   <div><strong>Local history</strong><p>Recent links may be saved in this browser on this device. Clear browser data to remove them.</p></div>
+  </div>
+  <div class="policy-item">
+   <i data-lucide="lock"></i>
+   <div><strong>No password required</strong><p>Never enter your social media password or private login information here.</p></div>
+  </div>
+  <div class="policy-item">
+   <i data-lucide="external-link"></i>
+   <div><strong>External websites</strong><p>QR codes can open third-party websites. Check a link before opening it.</p></div>
+  </div>
+  <div class="policy-item">
+   <i data-lucide="info"></i>
+   <div><strong>Internet connection</strong><p>The QR library and fonts are loaded from external services.</p></div>
+  </div>
+ </div>
+
+ <label class="agree">
+  <input type="checkbox" id="agree">
+  <span>I have read and understood this privacy information.</span>
+ </label>
+
+ <div class="actions">
+  <button class="primary" onclick="acceptPrivacy()">Agree & Continue <i data-lucide="arrow-right"></i></button>
+  <button class="secondary" onclick="showScreen('welcome')">Back</button>
+ </div>
+ <div class="credit-footer">Privacy information · <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- LOADING -->
+<section class="screen" id="loading">
+ <div class="loading-screen">
+  <div class="spinner"><i data-lucide="qr-code"></i></div>
+  <div class="eyebrow" id="loadingEyebrow">PLEASE WAIT</div>
+  <h2 id="loadingTitle">Preparing QR Studio</h2>
+  <p id="loadingDescription" style="margin-top:9px">Getting everything ready for you...</p>
+  <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+  <p class="loading-caption" id="progressText">Please wait...</p>
+  <div class="credit-footer">Powered by <strong>C9 UZAIR</strong></div>
+ </div>
+</section>
+
+<!-- HOME -->
+<section class="screen" id="home">
+ <div class="eyebrow">YOUR WORKSPACE</div>
+ <h1>Welcome to<br><span class="gradient">QR Studio</span></h1>
+ <p style="margin-top:10px">What would you like to create today?</p>
+
+ <div class="home-hero" style="margin-top:23px">
+  <div class="hero-icon"><i data-lucide="qr-code"></i></div>
+  <h2>Create your own QR code</h2>
+  <p>Convert links and social profiles into scannable QR codes.</p>
+  <button class="primary" style="margin-top:20px" onclick="delayedGo('types','Opening QR options...',4)">
+   Create New QR <i data-lucide="arrow-right"></i>
+  </button>
+ </div>
+
+ <h2 class="section-title">Your Activity</h2>
+ <div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+   <div><div style="font-size:24px;font-weight:800" id="totalCount">0</div><p class="small">QR codes created</p></div>
+   <i data-lucide="activity" style="color:#a991ff;width:30px;height:30px"></i>
+  </div>
+  <button class="secondary" style="margin-top:16px" onclick="delayedGo('history','Opening your history...',3)">
+   <i data-lucide="clock"></i> View History
+  </button>
+ </div>
+ <div class="credit-footer">Created with care by <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- TYPE SELECTION -->
+<section class="screen" id="types">
+ <div class="back-row">
+  <button class="back" onclick="delayedGo('home','Going back...',3)"><i data-lucide="arrow-left"></i></button>
+  <div><h2>Choose QR Type</h2><p>Select your destination</p></div>
+ </div>
+
+ <div class="eyebrow">SELECT A PLATFORM</div>
+ <div class="option-list">
+  <button class="option" onclick="chooseType('website')">
+   <div class="option-icon"><i data-lucide="globe"></i></div>
+   <div><strong>Website</strong><small>Any website address</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('whatsapp')">
+   <div class="option-icon"><i data-lucide="message-circle"></i></div>
+   <div><strong>WhatsApp</strong><small>Open a WhatsApp chat</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('instagram')">
+   <div class="option-icon"><i data-lucide="instagram"></i></div>
+   <div><strong>Instagram</strong><small>Open a profile</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('tiktok')">
+   <div class="option-icon"><i data-lucide="music-2"></i></div>
+   <div><strong>TikTok</strong><small>Open a TikTok profile</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('facebook')">
+   <div class="option-icon"><i data-lucide="facebook"></i></div>
+   <div><strong>Facebook</strong><small>Open a Facebook page</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('youtube')">
+   <div class="option-icon"><i data-lucide="youtube"></i></div>
+   <div><strong>YouTube</strong><small>Open a channel or video</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('twitter')">
+   <div class="option-icon"><i data-lucide="at-sign"></i></div>
+   <div><strong>Twitter / X</strong><small>Open a profile</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+  <button class="option" onclick="chooseType('custom')">
+   <div class="option-icon"><i data-lucide="link"></i></div>
+   <div><strong>Custom Link</strong><small>Any HTTP or HTTPS URL</small></div>
+   <i class="arrow" data-lucide="chevron-right"></i>
+  </button>
+ </div>
+ <div class="credit-footer">QR options by <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- DETAILS -->
+<section class="screen" id="details">
+ <div class="back-row">
+  <button class="back" onclick="delayedGo('types','Returning to options...',3)"><i data-lucide="arrow-left"></i></button>
+  <div><h2>Enter Details</h2><p>Set up your QR code</p></div>
+ </div>
+
+ <div class="card">
+  <div class="eyebrow" id="typeTitle">WEBSITE QR</div>
+  <label class="label" id="inputLabel" for="userInput">Website URL</label>
+  <input class="field" id="userInput" placeholder="https://example.com">
+
+  <label class="label">QR Code Colour</label>
+  <div class="colors">
+   <button class="color selected" style="background:#202044" data-color="#202044" onclick="selectColor(this)"></button>
+   <button class="color" style="background:#6746db" data-color="#6746db" onclick="selectColor(this)"></button>
+   <button class="color" style="background:#087f8c" data-color="#087f8c" onclick="selectColor(this)"></button>
+   <button class="color" style="background:#16845b" data-color="#16845b" onclick="selectColor(this)"></button>
+   <input class="custom-color" type="color" id="customColor" value="#202044" onchange="customizeColor(this.value)">
+  </div>
+
+  <div class="tip">
+   <i data-lucide="shield-check" style="width:14px;vertical-align:middle"></i>
+   Do not enter passwords or private account credentials. Only enter the public link you want to share.
+  </div>
+ </div>
+
+ <div class="actions">
+  <button class="primary" onclick="startQR()">
+   Continue <i data-lucide="arrow-right"></i>
+  </button>
+  <button class="secondary" onclick="delayedGo('types','Going back...',3)">Back</button>
+ </div>
+ <div class="credit-footer">Designed by <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="result">
+ <div style="text-align:center;padding-top:8px">
+  <div class="success"><i data-lucide="check"></i></div>
+  <div class="eyebrow">GENERATION COMPLETE</div>
+  <h1>Your QR Code<br><span class="gradient">is ready!</span></h1>
+  <p style="margin-top:9px">Your QR code has been created successfully.</p>
+ </div>
+
+ <div class="result-card"><div id="qrOutput"></div></div>
+ <div class="result-url" id="finalUrl"></div>
+
+ <div class="actions">
+  <button class="primary" onclick="downloadQR()"><i data-lucide="download"></i> Download PNG</button>
+  <button class="secondary" onclick="shareLink()"><i data-lucide="share-2"></i> Share Link</button>
+  <button class="secondary" onclick="delayedGo('types','Preparing a new QR...',3)"><i data-lucide="plus"></i> Create Another</button>
+  <button class="secondary" onclick="delayedGo('home','Returning home...',3)"><i data-lucide="house"></i> Home</button>
+ </div>
+ <div class="credit-footer">QR Studio · Built by <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- HISTORY -->
+<section class="screen" id="history">
+ <div class="back-row">
+  <button class="back" onclick="delayedGo('home','Returning home...',3)"><i data-lucide="arrow-left"></i></button>
+  <div><h2>QR History</h2><p>Your recent QR creations</p></div>
+ </div>
+ <div class="card" id="historyList"></div>
+ <div class="credit-footer">Your QR collection · <strong>C9 UZAIR</strong></div>
+</section>
+
+<!-- TOAST -->
+<div class="toast-area" id="toastArea"></div>
+
+<!-- CONTACT / BRAND FOOTER -->
+<div style="text-align:center;padding:15px 10px 25px;color:#8f94ae;font-size:10px">
+ <strong style="color:#b5a3ff">C9 UZAIR</strong> · Creator of QR Studio<br>
+ <span style="display:block;margin-top:7px">Contact On WhatsApp : +92 316 2423759</span>
+</div>
+
+</div>
+
+<script>
+const screens=document.querySelectorAll(".screen");
+let selectedType="website";
+let selectedColor="#202044";
+let currentLink="";
+let historyItems=JSON.parse(localStorage.getItem("c9qrHistory")||"[]");
+let loaderInterval=null;
+
+const info={
+ website:["WEBSITE QR","Website URL","https://example.com"],
+ whatsapp:["WHATSAPP QR","WhatsApp number with country code","923001234567"],
+ instagram:["INSTAGRAM QR","Instagram username or URL","username"],
+ tiktok:["TIKTOK QR","TikTok username or URL","username"],
+ facebook:["FACEBOOK QR","Facebook page URL or username","username"],
+ youtube:["YOUTUBE QR","YouTube channel or video URL","https://youtube.com/@channel"],
+ twitter:["TWITTER / X QR","Twitter/X username or URL","username"],
+ custom:["CUSTOM LINK QR","Your public link","https://example.com"]
+};
+
+function icons(){
+ if(window.lucide)lucide.createIcons();
+}
+
+function showScreen(id){
+ if(loaderInterval){clearInterval(loaderInterval);loaderInterval=null}
+ screens.forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+ icons();
+}
+
+function toast(message){
+ const area=document.getElementById("toastArea");
+ const node=document.createElement("div");
+ node.className="toast";
+ const icon=document.createElement("i");
+ icon.setAttribute("data-lucide","check-circle");
+ const text=document.createElement("span");
+ text.textContent=message;
+ node.append(icon,text);
+ area.append(node);
+ icons();
+ setTimeout(()=>{
+  node.style.opacity="0";
+  setTimeout(()=>node.remove(),250);
+ },2500);
+}
+
+function loading(title,description,seconds,next){
+ showScreen("loading");
+ document.getElementById("loadingTitle").textContent=title;
+ document.getElementById("loadingDescription").textContent=description;
+ document.getElementById("progressFill").style.width="0%";
+ document.getElementById("progressText").textContent="Please wait...";
+ let elapsed=0;
+ const duration=seconds*1000;
+ const interval=100;
+ loaderInterval=setInterval(()=>{
+  elapsed+=interval;
+  const percent=Math.min(100,Math.round(elapsed/duration*100));
+  document.getElementById("progressFill").style.width=percent+"%";
+  document.getElementById("progressText").textContent=percent+"% complete";
+  if(elapsed>=duration){
+   clearInterval(loaderInterval);
+   loaderInterval=null;
+   next();
+  }
+ },interval);
+}
+
+function delayedGo(id,message,seconds=4){
+ loading(message,"Please wait while we prepare the next screen.",seconds,()=>showScreen(id));
+}
+
+function acceptPrivacy(){
+ if(!document.getElementById("agree").checked){
+  toast("Please read and accept the privacy information.");
+  return;
+ }
+ loading("Opening QR Studio","Preparing your workspace...",6,()=>{
+  showScreen("home");
+  toast("Welcome to QR Studio!");
+ });
+}
+
+function chooseType(type){
+ selectedType=type;
+ const data=info[type];
+ loading("Preparing "+type+" QR","Loading your QR settings...",4,()=>{
+  document.getElementById("typeTitle").textContent=data[0];
+  document.getElementById("inputLabel").textContent=data[1];
+  document.getElementById("userInput").placeholder=data[2];
+  document.getElementById("userInput").value="";
+  showScreen("details");
+ });
+}
+
+function selectColor(button){
+ document.querySelectorAll(".color").forEach(x=>x.classList.remove("selected"));
+ button.classList.add("selected");
+ selectedColor=button.dataset.color;
+ document.getElementById("customColor").value=selectedColor;
+}
+
+function customizeColor(value){
+ selectedColor=value;
+ document.querySelectorAll(".color").forEach(x=>x.classList.remove("selected"));
+}
+
+function buildLink(){
+ let value=document.getElementById("userInput").value.trim();
+ if(!value)throw Error("Please enter a link or username.");
+
+ const domains={
+  instagram:"instagram.com/",
+  tiktok:"tiktok.com/@",
+  facebook:"facebook.com/",
+  youtube:"youtube.com/@",
+  twitter:"x.com/"
+ };
+
+ if(selectedType==="whatsapp"){
+  const number=value.replace(/[\s+()-]/g,"");
+  if(!/^\d{8,15}$/.test(number))throw Error("Enter a valid WhatsApp number with country code.");
+  return "https://wa.me/"+number;
+ }
+
+ if(selectedType==="instagram"||selectedType==="tiktok"||
+    selectedType==="facebook"||selectedType==="twitter"){
+  if(!value.includes("://")&&!value.includes(".com/")){
+   value=value.replace(/^@/,"");
+   value="https://www."+domains[selectedType]+value;
+  }
+ }
+
+ if(selectedType==="youtube"&&!value.includes("://")){
+  value="https://www.youtube.com/@"+value.replace(/^@/,"");
+ }
+
+ let url;
+ try{url=new URL(value)}
+ catch{throw Error("Please enter a valid link or username.")}
+
+ if(!["http:","https:"].includes(url.protocol))throw Error("Only HTTP and HTTPS links are allowed.");
+
+ const allowed={
+  instagram:["instagram.com","www.instagram.com"],
+  tiktok:["tiktok.com","www.tiktok.com","m.tiktok.com"],
+  facebook:["facebook.com","www.facebook.com","m.facebook.com"],
+  youtube:["youtube.com","www.youtube.com","youtu.be","m.youtube.com"],
+  twitter:["x.com","www.x.com","twitter.com","www.twitter.com"]
+ };
+
+ if(allowed[selectedType]&&!allowed[selectedType].includes(url.hostname.toLowerCase())){
+  throw Error("Please enter a valid "+selectedType+" link.");
+ }
+
+ return url.href;
+}
+
+function startQR(){
+ try{
+  currentLink=buildLink();
+  if(typeof QRCode==="undefined")throw Error("QR library did not load. Check your internet connection.");
+  loading("Generating your QR Code","Creating and preparing your QR image...",10,createQR);
+ }catch(error){
+  toast(error.message);
+ }
+}
+
+function createQR(){
+ const output=document.getElementById("qrOutput");
+ output.innerHTML="";
+ try{
+  new QRCode(output,{
+   text:currentLink,width:220,height:220,
+   colorDark:selectedColor,colorLight:"#ffffff",
+   correctLevel:QRCode.CorrectLevel.H
+  });
+  document.getElementById("finalUrl").textContent=currentLink;
+  historyItems.unshift({
+   url:currentLink,type:selectedType,
+   date:new Date().toLocaleDateString()
+  });
+  historyItems=historyItems.slice(0,30);
+  localStorage.setItem("c9qrHistory",JSON.stringify(historyItems));
+  updateCount();
+  showScreen("result");
+  toast("Your QR code is ready!");
+ }catch(e){
+  showScreen("details");
+  toast("QR generation failed. Please try again.");
+ }
+}
+
+function downloadQR(){
+ const output=document.getElementById("qrOutput");
+ const canvas=output.querySelector("canvas");
+ const img=output.querySelector("img");
+ let url;
+ if(canvas)url=canvas.toDataURL("image/png");
+ else if(img)url=img.src;
+ else return toast("QR image is not ready.");
+ const a=document.createElement("a");
+ a.href=url;a.download="C9-UZAIR-QR-Code.png";
+ document.body.appendChild(a);a.click();a.remove();
+ toast("QR code downloaded!");
+}
+
+async function shareLink(){
+ try{
+  if(navigator.share){
+   await navigator.share({title:"My QR Code",text:"Open this link:",url:currentLink});
+  }else if(navigator.clipboard){
+   await navigator.clipboard.writeText(currentLink);
+   toast("Link copied!");
+  }else{
+   toast("Sharing is not available in this browser.");
+  }
+ }catch(e){
+  if(e.name!=="AbortError")toast("Could not share the link.");
+ }
+}
+
+function updateCount(){
+ document.getElementById("totalCount").textContent=historyItems.length;
+}
+
+function renderHistory(){
+ const box=document.getElementById("historyList");
+ box.innerHTML="";
+ if(!historyItems.length){
+  box.innerHTML='<div class="empty"><i data-lucide="qr-code"></i><p>No QR codes created yet.</p></div>';
+  icons();return;
+ }
+ historyItems.forEach((item,index)=>{
+  const row=document.createElement("div");
+  row.className="history-item";
+  const icon=document.createElement("div");
+  icon.className="option-icon";
+  icon.innerHTML='<i data-lucide="qr-code"></i>';
+  const infoBox=document.createElement("div");
+  const strong=document.createElement("strong");
+  strong.textContent=item.type.toUpperCase()+" QR";
+  const small=document.createElement("small");
+  small.textContent=item.url;
+  infoBox.append(strong,small);
+  const del=document.createElement("button");
+  del.setAttribute("aria-label","Delete history entry");
+  del.innerHTML='<i data-lucide="trash-2"></i>';
+  del.onclick=()=>{
+   historyItems.splice(index,1);
+   localStorage.setItem("c9qrHistory",JSON.stringify(historyItems));
+   renderHistory();updateCount();toast("History item deleted.");
+  };
+  row.append(icon,infoBox,del);
+  box.append(row);
+ });
+ icons();
+}
+
+document.getElementById("nav-history")?.addEventListener("click",()=>renderHistory());
+updateCount();
+icons();
+</script>
+</body>
+</html>
